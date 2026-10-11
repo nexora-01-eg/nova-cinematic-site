@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOVA — A Living Digital Object</title>
+<meta name="description" content="A cinematic experimental website built as a living digital object.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050505;--fg:#f4f1ea;--muted:#8e8c86;--line:rgba(244,241,234,.14);
+  --acid:#d8ff5a;--violet:#8e7dff;--cyan:#66e6ff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:auto}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"DM Sans",sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--acid);color:#050505}
+#webgl{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.noise{position:fixed;inset:-50%;z-index:20;pointer-events:none;opacity:.055;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");animation:noise .2s steps(2) infinite}
+@keyframes noise{0%{transform:translate(0,0)}25%{transform:translate(2%,-1%)}50%{transform:translate(-1%,2%)}75%{transform:translate(1%,1%)}100%{transform:translate(0,0)}}
+.nav{position:fixed;z-index:30;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:26px 34px;mix-blend-mode:difference}
+.logo{font:700 17px "Space Grotesk";letter-spacing:.18em}
+.nav-right{display:flex;gap:22px;font-size:12px;text-transform:uppercase;letter-spacing:.13em}
+.nav-right a{opacity:.75;transition:.3s}.nav-right a:hover{opacity:1}
+.progress{position:fixed;z-index:31;left:0;top:0;width:100%;height:2px;background:transparent}
+.progress i{display:block;height:100%;width:0;background:var(--acid)}
+main{position:relative;z-index:2}
+section{min-height:100vh;position:relative;padding:10vw 7vw}
+.hero{display:flex;align-items:flex-end;min-height:100vh;padding-bottom:8vh}
+.hero-grid{width:min(1100px,100%)}
+.eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--acid);margin-bottom:28px}
+h1{font:500 clamp(74px,13vw,210px)/.78 "Space Grotesk";letter-spacing:-.075em;margin:0;max-width:1100px}
+.hero-copy{display:flex;justify-content:space-between;gap:30px;margin-top:48px;max-width:900px}
+.hero-copy p{max-width:420px;color:#b7b4ac;font-size:16px;line-height:1.7;margin:0}
+.scroll-note{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#777;align-self:flex-end}
+.marquee{position:absolute;left:0;right:0;bottom:18px;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:13px 0}
+.marquee-track{display:flex;width:max-content;animation:marquee 22s linear infinite}
+.marquee span{font:500 12px "Space Grotesk";letter-spacing:.16em;text-transform:uppercase;margin-right:50px;color:#aaa}
+@keyframes marquee{to{transform:translateX(-50%)}}
+.statement{display:grid;grid-template-columns:1fr 2fr;align-items:center;gap:8vw}
+.statement .index{font:500 13px "Space Grotesk";color:var(--acid);letter-spacing:.18em}
+.statement h2{font:500 clamp(42px,6.7vw,105px)/.92 "Space Grotesk";letter-spacing:-.055em;margin:0;max-width:900px}
+.statement h2 span{color:#6e6c67}
+.orbit-section{min-height:120vh;display:flex;align-items:center}
+.orbit-copy{max-width:470px;position:relative;z-index:3}
+.orbit-copy h2{font:500 clamp(48px,7vw,100px)/.9 "Space Grotesk";letter-spacing:-.06em;margin:0 0 25px}
+.orbit-copy p{color:#9d9b94;line-height:1.75}
+.specs{margin-top:35px;border-top:1px solid var(--line)}
+.spec{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:13px 0;font-size:12px;text-transform:uppercase;letter-spacing:.11em}
+.spec b{font-weight:500;color:#f2f0e9}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:70px}
+.card{min-height:330px;border:1px solid var(--line);padding:28px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.008));backdrop-filter:blur(12px);transition:transform .5s,border-color .5s}
+.card:hover{transform:translateY(-12px);border-color:rgba(216,255,90,.5)}
+.card-no{color:var(--acid);font:500 12px "Space Grotesk"}
+.card h3{font:500 30px/1 "Space Grotesk";letter-spacing:-.035em;margin:0}
+.card p{color:#8f8d87;font-size:13px;line-height:1.6;margin:0;max-width:280px}
+.final{display:flex;align-items:center;justify-content:center;text-align:center;min-height:105vh}
+.final-inner{max-width:1100px}
+.final h2{font:500 clamp(70px,13vw,190px)/.78 "Space Grotesk";letter-spacing:-.08em;margin:0}
+.final p{color:#92908a;margin:42px auto 0;max-width:460px;line-height:1.7}
+.cta{display:inline-flex;margin-top:35px;border:1px solid rgba(216,255,90,.5);padding:15px 22px;text-transform:uppercase;font-size:11px;letter-spacing:.16em;transition:.35s}
+.cta:hover{background:var(--acid);color:#050505}
+.footer{padding:25px 34px 35px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:#666;font-size:10px;text-transform:uppercase;letter-spacing:.14em}
+.cursor{position:fixed;z-index:50;width:18px;height:18px;border:1px solid var(--acid);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;mix-blend-mode:difference;transition:width .2s,height .2s}
+@media(max-width:800px){
+ .nav{padding:20px}.nav-right a:not(:last-child){display:none}
+ section{padding:28vw 7vw}
+ .hero{padding-bottom:15vh}.hero-copy{display:block}.scroll-note{margin-top:30px}
+ .statement{grid-template-columns:1fr;gap:25px}.cards{grid-template-columns:1fr}
+ .card{min-height:270px}.orbit-section{min-height:100vh}
+}
+</style>
+</head>
+<body>
+<canvas id="webgl"></canvas>
+<div class="noise"></div>
+<div class="cursor" id="cursor"></div>
+<div class="progress"><i id="bar"></i></div>
+
+<nav class="nav">
+  <a class="logo" href="#">NOVA/01</a>
+  <div class="nav-right"><a href="#idea">Idea</a><a href="#object">Object</a><a href="#system">System</a><a href="#enter">Enter</a></div>
+</nav>
+
+<main>
+<section class="hero">
+  <div class="hero-grid">
+    <div class="eyebrow">A living digital object / 2026</div>
+    <h1>THE<br>FUTURE<br>FEELS.</h1>
+    <div class="hero-copy">
+      <p>NOVA is an experimental world built around one idea: technology should not feel like a tool. It should feel like a place you can enter.</p>
+      <div class="scroll-note">Scroll to enter ↓</div>
+    </div>
+  </div>
+  <div class="marquee"><div class="marquee-track">
+    <span>Immersive Web</span><span>Generative Space</span><span>Motion as Interface</span><span>Human × Machine</span><span>Immersive Web</span><span>Generative Space</span><span>Motion as Interface</span><span>Human × Machine</span>
+  </div></div>
+</section>
+
+<section class="statement" id="idea">
+  <div class="index">01 / THE IDEA</div>
+  <h2>Most websites <span>show you something.</span><br>We wanted you to feel something.</h2>
+</section>
+
+<section class="orbit-section" id="object">
+  <div class="orbit-copy">
+    <div class="eyebrow">02 / The Object</div>
+    <h2>ONE<br>WORLD.</h2>
+    <p>There is no product gallery. No dashboard. No wall of cards. Just a single evolving object responding to your presence.</p>
+    <div class="specs">
+      <div class="spec"><span>Material</span><b>Digital Matter</b></div>
+      <div class="spec"><span>State</span><b>Always Moving</b></div>
+      <div class="spec"><span>Interface</span><b>Presence</b></div>
+      <div class="spec"><span>Engine</span><b>WebGL / GPU</b></div>
+    </div>
+  </div>
+</section>
+
+<section id="system">
+  <div class="eyebrow">03 / The System</div>
+  <h2 style="font:500 clamp(52px,8vw,120px)/.88 'Space Grotesk';letter-spacing:-.06em;margin:0;max-width:950px">DESIGN<br>IS THE<br>INTERFACE.</h2>
+  <div class="cards">
+    <article class="card"><div class="card-no">A / 01</div><h3>Motion</h3><p>Every movement has a purpose. Scroll becomes a camera. Hover becomes a signal. Waiting becomes part of the composition.</p></article>
+    <article class="card"><div class="card-no">B / 02</div><h3>Depth</h3><p>Layers, light and spatial relationships create an environment instead of another flat page.</p></article>
+    <article class="card"><div class="card-no">C / 03</div><h3>Silence</h3><p>Luxury is knowing what not to add. Empty space gives the important things room to become unforgettable.</p></article>
+  </div>
+</section>
+
+<section class="final" id="enter">
+  <div class="final-inner">
+    <div class="eyebrow">04 / End of page. Beginning of the idea.</div>
+    <h2>ENTER<br>NOVA.</h2>
+    <p>Built to demonstrate what happens when a website stops behaving like a document and starts behaving like an experience.</p>
+    <a class="cta" href="#top">Restart experience ↗</a>
+  </div>
+</section>
+</main>
+
+<footer class="footer"><span>NOVA/01 — Experimental Digital Object</span><span>© 2026 — Built for the browser</span></footer>
+
+<script type="module">
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
+import { EffectComposer } from "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/postprocessing/UnrealBloomPass.js";
+import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+import Lenis from "https://cdn.jsdelivr.net/npm/lenis@1.3.8/+esm";
+
+const canvas=document.querySelector("#webgl");
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:"high-performance"});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.25;
+
+const scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x050505,.055);
+const camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,100);
+camera.position.set(0,0,7);
+
+const group=new THREE.Group();
+scene.add(group);
+
+const core=new THREE.Mesh(
+ new THREE.IcosahedronGeometry(1.65,5),
+ new THREE.MeshStandardMaterial({color:0x11120d,roughness:.28,metalness:.82,emissive:0x222800,emissiveIntensity:.8})
+);
+group.add(core);
+
+const wire=new THREE.Mesh(
+ new THREE.IcosahedronGeometry(1.82,2),
+ new THREE.MeshBasicMaterial({color:0xd8ff5a,wireframe:true,transparent:true,opacity:.13})
+);
+group.add(wire);
+
+const ringMat=new THREE.MeshBasicMaterial({color:0x8e7dff,transparent:true,opacity:.22});
+for(let i=0;i<4;i++){
+ const ring=new THREE.Mesh(new THREE.TorusGeometry(2.15+i*.23,.008,8,180),ringMat);
+ ring.rotation.x=Math.PI/2*(i%2);
+ ring.rotation.z=i*.55;
+ group.add(ring);
+}
+
+const count=3200, pos=new Float32Array(count*3);
+for(let i=0;i<count;i++){
+ const r=3.0+Math.random()*4.5, a=Math.random()*Math.PI*2, b=Math.acos(2*Math.random()-1);
+ pos[i*3]=r*Math.sin(b)*Math.cos(a);
+ pos[i*3+1]=r*Math.sin(b)*Math.sin(a);
+ pos[i*3+2]=r*Math.cos(b);
+}
+const pts=new THREE.Points(new THREE.BufferGeometry(),new THREE.PointsMaterial({color:0x9da1a0,size:.012,transparent:true,opacity:.55}));
+pts.geometry.setAttribute("position",new THREE.BufferAttribute(pos,3));
+scene.add(pts);
+
+scene.add(new THREE.AmbientLight(0x6b7280,1.1));
+const key=new THREE.PointLight(0xd8ff5a,45,16);key.position.set(3,2,4);scene.add(key);
+const fill=new THREE.PointLight(0x8e7dff,30,14);fill.position.set(-4,-2,1);scene.add(fill);
+
+const composer=new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene,camera));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),.72,.75,.18));
+
+let scroll=0, targetScroll=0, mx=0,my=0;
+addEventListener("mousemove",e=>{mx=(e.clientX/innerWidth-.5);my=(e.clientY/innerHeight-.5)});
+addEventListener("scroll",()=>targetScroll=scrollY);
+const lenis=new Lenis({duration:1.15,smoothWheel:true});
+function raf(t){lenis.raf(t);requestAnimationFrame(raf)} requestAnimationFrame(raf);
+
+const cursor=document.querySelector("#cursor");
+addEventListener("mousemove",e=>{cursor.style.left=e.clientX+"px";cursor.style.top=e.clientY+"px"});
+document.querySelectorAll("a,.card").forEach(el=>{
+ el.addEventListener("mouseenter",()=>{cursor.style.width="42px";cursor.style.height="42px"});
+ el.addEventListener("mouseleave",()=>{cursor.style.width="18px";cursor.style.height="18px"});
+});
+
+function animate(t){
+ requestAnimationFrame(animate);
+ scroll += (targetScroll-scroll)*.055;
+ const s=scroll/Math.max(document.body.scrollHeight-innerHeight,1);
+ group.rotation.x += .0018;
+ group.rotation.y += .0032;
+ group.rotation.y += mx*.0007;
+ group.rotation.x += my*.0004;
+ group.position.y = Math.sin(t*.00045)*.08;
+ group.position.z = Math.min(s*1.1,1.1);
+ core.rotation.z=t*.00013;
+ wire.rotation.z=-t*.00018;
+ pts.rotation.y=t*.000025;
+ pts.rotation.x=s*.18;
+ camera.position.x += (mx*.28-camera.position.x)*.025;
+ camera.position.y += (-my*.18-camera.position.y)*.025;
+ camera.lookAt(0,0,0);
+ const pulse=1+Math.sin(t*.0012)*.025+s*.14;
+ group.scale.setScalar(pulse);
+ key.position.x=3+mx*2;
+ fill.position.y=-2-my*2;
+ composer.render();
+ document.querySelector("#bar").style.width=(s*100)+"%";
+}
+animate(0);
+
+addEventListener("resize",()=>{
+ renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+ composer.setSize(innerWidth,innerHeight);
+ camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
+});
+gsap.utils.toArray(".statement h2,.cards .card,.final-inner").forEach(el=>{
+ gsap.from(el,{y:80,opacity:0,duration:1.2,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 82%",once:true}});
+});
+</script>
+</body>
+</html>
